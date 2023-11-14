@@ -7,7 +7,12 @@
   "private": true,
   "dependencies": {
     "@sap/cds": "^7",
-    "express": "^4"
+    "@sap/cds-dk": "^7.3.2",
+    "@sap/xsenv": "^4.1.0",
+    "@sap/xssec": "^3.4.0",
+    "express": "^4",
+    "passport": "^0.6.0",
+    "hdb": "^0.18.3"
   },
   "devDependencies": {
     "@cap-js/sqlite": "^1"
@@ -17,22 +22,45 @@
   },
   "cds": {
     "requires": {
+      "auth": {
+        "[development]": {
+          "strategy": "mock",
+          "users": {
+            "john": {
+              "roles": [
+                "Admin"
+              ]
+            },
+            "mary": {
+              "roles": [
+                "Viewer"
+              ]
+            }
+          }
+        }
+      },
       "ECEmployeeProfile": {
         "kind": "odata-v2",
         "model": "srv/external/ECEmployeeProfile",
-        "credentials":{
-          "destination":"SFSF",
+        "credentials": {
+          "destination": "SFSF",
           "path": "/odata/v2/Background_SpecialAssign"
         }
       },
       "PLTUserManagement": {
         "kind": "odata-v2",
         "model": "srv/external/PLTUserManagement",
-        "credentials":{
-          "destination":"SFSF",
+        "credentials": {
+          "destination": "SFSF",
           "path": "/odata/v2/User"
         }
+      },
+      "db": {
+        "kind": "hana"
       }
+    },
+    "hana": {
+      "deploy-format": "hdbtable"
     }
   }
 }

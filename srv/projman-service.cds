@@ -3,20 +3,23 @@ using PLTUserManagement as UM_API from '../srv/external/PLTUserManagement.csn';
 
 namespace sfsf.projman.service;
 
-service ProjectManager @(path : '/projman') {
+service ProjectManager @(
+    path    : '/projman',
+    requires: 'authenticated-user'
+) {
     @odata.draft.enabled
-    entity Project as projection on model.Project;
+    entity Project   as projection on model.Project;
 
-    entity Member as
+    entity Member    as
         select from model.Member {
-            * ,
+            *,
             member.defaultFullName as member_name
         };
 
-    entity Activity as projection on model.Activity;
+    entity Activity  as projection on model.Activity;
 
     @readonly
-    entity SFSF_User       as
+    entity SFSF_User as
         select from UM_API.User {
             key userId,
                 username,
@@ -27,5 +30,9 @@ service ProjectManager @(path : '/projman') {
                 title
         };
 
+    annotate Project with @(requires: 'Admin');
+    annotate Member with @(requires: 'Admin');
+    annotate Activity with @(requires: 'Admin');
+    annotate SFSF_User with @(requires: 'Admin');
     annotate SFSF_User with @(cds.odata.valuelist);
 }
